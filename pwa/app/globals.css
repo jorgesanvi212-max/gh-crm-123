@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+/* Tokens de CRM-123 (README.handoff §3.1). Solo modo claro. */
+@theme inline {
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  --color-primary: #1E6B45;
+  --color-primary-hover: #175636;
+  --color-primary-soft: #E8F2EC;
+  --color-primary-soft-border: #CFE3D6;
+  --color-primary-foreground: #FFFFFF;
+
+  --color-bg: #F7F8F7;
+  --color-surface: #FFFFFF;
+  --color-border: #E3E6E3;
+  --color-border-input: #CFD5D1;
+  --color-text: #1C2420;
+  --color-text-muted: #5B655F;
+  --color-hover-neutral: #F2F4F2;
+  --color-row-hover: #FAFBFA;
+  --color-skeleton: #ECEFEC;
+
+  --color-neutral-soft: #EEF0EE;
+  --color-neutral-strong: #3F4943;
+  --color-neutral-border: #DDE1DE;
+
+  --color-danger: #C62828;
+  --color-danger-soft: #FDECEC;
+  --color-danger-border: #F2C4C4;
+  --color-danger-banner-border: #F5C9C9;
+  --color-danger-row: #FFFAFA;
+
+  --color-warning: #B26A00;
+  --color-warning-text: #8F5500;
+  --color-warning-text-strong: #7A4A00;
+  --color-warning-soft: #FFF4E0;
+
+  --color-info: #1F5FA8;
+  --color-info-soft: #E9F0FA;
+  --color-info-border: #BFD3EC;
+
+  --color-lost-soft: #F9EDED;
+  --color-lost-text: #9E3A3A;
+  --color-switch-off: #B9C1BC;
+
+  --shadow-menu: 0 6px 20px rgba(28, 36, 32, 0.1);
+  --shadow-dialog: 0 12px 32px rgba(28, 36, 32, 0.14);
+  --shadow-toast: 0 8px 24px rgba(28, 36, 32, 0.18);
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  body {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+}
