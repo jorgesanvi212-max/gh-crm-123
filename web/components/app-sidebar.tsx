@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { LayoutDashboard, SquareCheck, TrendingUp, UserRound, Users, type LucideIcon } from 'lucide-react'
 import { LogoutButton } from '@/components/logout-button'
 import { cn } from '@/lib/utils'
@@ -23,8 +23,27 @@ const itemClass = (active: boolean) =>
     active ? 'bg-primary-soft font-semibold text-primary-hover hover:text-primary-hover' : 'font-medium',
   )
 
-export function AppSidebar({ fullName, roleLabel, overdue }: { fullName: string; roleLabel: string; overdue: number }) {
+/**
+ * Barra lateral. El filtro "Vendedor" del supervisor (?vendedor=) se mantiene al cambiar de pantalla.
+ * `overdueBySeller`: tareas vencidas por vendedor (v_seller_kpis); el contador suma las del filtro actual.
+ */
+export function AppSidebar({
+  fullName,
+  roleLabel,
+  overdueBySeller,
+}: {
+  fullName: string
+  roleLabel: string
+  overdueBySeller: Record<string, number>
+}) {
   const pathname = usePathname()
+  const params = useSearchParams()
+  const seller = params.get('vendedor')
+  const keep = seller ? `?vendedor=${encodeURIComponent(seller)}` : ''
+  const overdue =
+    seller && seller in overdueBySeller
+      ? overdueBySeller[seller]
+      : Object.values(overdueBySeller).reduce((sum, n) => sum + n, 0)
 
   return (
     <aside className="flex flex-col gap-1 border-r border-border bg-surface px-3 py-4">
@@ -33,7 +52,7 @@ export function AppSidebar({ fullName, roleLabel, overdue }: { fullName: string;
         {NAV.map(({ href, label, icon: Icon }) => {
           const active = isActive(pathname, href)
           return (
-            <Link key={href} href={href} aria-current={active ? 'page' : undefined} className={cn(itemClass(active), 'h-9')}>
+            <Link key={href} href={`${href}${keep}`} aria-current={active ? 'page' : undefined} className={cn(itemClass(active), 'h-9')}>
               <Icon className="size-[18px]" aria-hidden="true" />
               <span className="flex-1">{label}</span>
               {href === '/tareas' && overdue > 0 && (

@@ -1,19 +1,26 @@
 import type { Metadata } from 'next'
 import { requireProfile } from '@/lib/auth/require-profile'
-import { ComingSoon } from '@/components/coming-soon'
+import { getActiveSellers, getScope } from '@/lib/scope'
+import { ClientForm } from '@/components/crm/client-form'
 import { PageBody } from '@/components/page-body'
 import { PageHeader } from '@/components/page-header'
 
 export const metadata: Metadata = { title: 'Cliente nuevo' }
 
-// Se construye en el Hito 3.
-export default async function ClienteNuevoPage() {
-  await requireProfile()
+export default async function ClienteNuevoPage({ searchParams }: PageProps<'/clientes/nuevo'>) {
+  const { supabase, profile } = await requireProfile()
+  const { isSupervisor, ownerId } = getScope(profile, await searchParams)
+  const sellers = isSupervisor ? await getActiveSellers(supabase) : []
+
   return (
     <>
       <PageHeader title="Cliente nuevo" back={{ href: '/clientes', label: 'Clientes' }} />
       <PageBody>
-        <ComingSoon />
+        <ClientForm
+          isSupervisor={isSupervisor}
+          sellers={sellers}
+          defaultOwnerId={ownerId && sellers.some((s) => s.id === ownerId) ? ownerId : undefined}
+        />
       </PageBody>
     </>
   )

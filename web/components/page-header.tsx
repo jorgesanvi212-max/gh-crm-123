@@ -4,15 +4,20 @@ import { getCurrentProfile } from '@/lib/auth/require-profile'
 import { formatHeaderDate } from '@/lib/format'
 import { Button } from '@/components/ui/button'
 import { SellerFilter } from '@/components/seller-filter'
+import { ArchivedToggle } from '@/components/crm/archived-toggle'
 
 type Props = {
   title: string
   back?: { href: string; label: string }
   primary?: { href: string; label: string }
+  /** Botón principal que no es un enlace (p. ej. "Nueva tarea", que abre un diálogo). */
+  actions?: React.ReactNode
+  /** Casilla "Mostrar archivados" (solo supervisor; Clientes y Oportunidades). */
+  archivedToggle?: boolean
 }
 
 // Cabecera de contenido: título, fecha de hoy (Madrid), selector de vendedor (supervisor) y botón principal.
-export async function PageHeader({ title, back, primary }: Props) {
+export async function PageHeader({ title, back, primary, actions, archivedToggle }: Props) {
   const { supabase, profile } = await getCurrentProfile()
   const isSupervisor = profile?.role === 'supervisor'
   const sellers = isSupervisor
@@ -35,6 +40,8 @@ export async function PageHeader({ title, back, primary }: Props) {
         <span className="text-[13px] text-text-muted">{formatHeaderDate()}</span>
       </div>
       {isSupervisor && <SellerFilter sellers={sellers} />}
+      {isSupervisor && archivedToggle && <ArchivedToggle />}
+      {actions}
       {primary && (
         <Button asChild>
           <Link href={primary.href} className="text-primary-foreground hover:text-primary-foreground hover:no-underline">
