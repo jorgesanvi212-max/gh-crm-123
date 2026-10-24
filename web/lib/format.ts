@@ -35,3 +35,19 @@ export function formatHeaderDate(value: Date | string | number = Date.now()): st
   const label = format(inMadrid(value), "EEEE, dd/MM/yyyy", { locale: es })
   return label.charAt(0).toUpperCase() + label.slice(1)
 }
+
+/** Fecha sin hora ("yyyy-MM-dd", p. ej. fecha prevista de cierre) → "dd/mm/aaaa". */
+export function formatDay(iso: string): string {
+  const [y, m, d] = iso.slice(0, 10).split('-')
+  return `${d}/${m}/${y}`
+}
+
+/** "dd/mm/aaaa HH:mm" en hora de Madrid. */
+export function formatDateTime(value: Date | string | number): string {
+  return `${formatDate(value)} ${formatTime(value)}`
+}
+
+/** Importe para un campo de formulario: 450 → "450,00". */
+export function amountToInput(amount: number | string): string {
+  return Number(amount).toFixed(2).replace('.', ',')
+}
